@@ -5,6 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 let mongoose = require("mongoose");
 var config = require("./config");
+console.log(config.getDbConnectionString());
 
 app.use(
   cors({

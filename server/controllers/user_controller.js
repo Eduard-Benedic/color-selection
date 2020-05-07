@@ -49,7 +49,10 @@ exports.signUp = (req, res, next) => {
 
   const user = new userModel(credentials);
 
-  userModel.findOne({ username: req.body.username }, function(err, userStatus) {
+  userModel.findOne({ username: req.body.username }, function (
+    err,
+    userStatus
+  ) {
     if (err) {
       console.log(err);
     } else {
@@ -57,9 +60,13 @@ exports.signUp = (req, res, next) => {
         user.save((err, uniqueUser) => {
           if (err) console.error(err);
           else {
-            let token = jwt.sign({ id: uniqueUser._id }, secret(), {
-              expiresIn: 86400, // expires in 24 hours
-            });
+            let token = jwt.sign(
+              { id: uniqueUser._id },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: 86400, // expires in 24 hours
+              }
+            );
             console.log("Token for signing up", token);
             res.cookie("token", token);
             return res.status(200).json({

@@ -3,41 +3,39 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const path = require("path");
-
 let mongoose = require("mongoose");
 var config = require("./config");
-let port = process.env.PORT;
-
-if (port == null || port == "") {
-  port = 9000;
-}
-
-app.use(express.static(path.resolve("../dist/")));
 
 app.use(
   cors({
-    // origin: "http://localhost:8080",
     credentials: true,
   })
 );
 
-const userRoutes = require("./routes/user");
-
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-//================== MULTER ==============
-
-app.get("/", (req, res, next) => {
-  res.sendFile("index.html", { root: path.join(__dirname, "../dist") });
-});
+const userRoutes = require("./routes/user");
 app.use("/api/user", userRoutes);
 
+// HANDLE PRODUCTION
+
+if (process.env.NODE_ENV === "production") {
+  // static folder
+
+  app.use(express.static(__dirname + "/public"));
+
+  // handle SPA
+  app.get(/.*/, (req, res) => {
+    res.sendFile(__dirname + "/public/index.html");
+  });
+}
+
+const port = process.env.PORT || 9000;
 mongoose.connect(
   config.getDbConnectionString(),
   { useNewUrlParser: true, useUnifiedTopology: true },
-  function() {
+  function () {
     app.listen(port);
     console.log("connected sucesful");
   }

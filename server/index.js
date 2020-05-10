@@ -10,6 +10,7 @@ console.log(config.getDbConnectionString());
 app.use(
   cors({
     credentials: true,
+    // origin: "http://localhost:8080",
   })
 );
 
@@ -32,7 +33,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 9000;
 mongoose.connect(
   config.getDbConnectionString(),
   { useNewUrlParser: true, useUnifiedTopology: true },

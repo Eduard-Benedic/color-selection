@@ -7,7 +7,7 @@ let mongoose = require("mongoose");
 let config = require("./config");
 let compression = require("compression");
 
-app.use(compression({ filter: shouldCompress }));
+app.use(compression());
 app.use(
   cors({
     credentials: true,

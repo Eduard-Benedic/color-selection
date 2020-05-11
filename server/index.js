@@ -4,9 +4,10 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 let mongoose = require("mongoose");
-var config = require("./config");
-console.log(config.getDbConnectionString());
+let config = require("./config");
+let compression = require("compression");
 
+app.use(compression({ filter: shouldCompress }));
 app.use(
   cors({
     credentials: true,

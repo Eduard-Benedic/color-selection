@@ -12,7 +12,11 @@ router.post(
   userController.signUp
 );
 
-router.post("/login", userController.logIn);
+router.post(
+  "/login",
+  [check("name").isEmail(), check("password")],
+  userController.logIn
+);
 router.put("/color", userController.saveColor);
 router.delete("/color", userController.deleteColor);
 router.get("/logOut", userController.logOut);

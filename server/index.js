@@ -22,7 +22,6 @@ const userRoutes = require("./routes/user");
 app.use("/api/user", userRoutes);
 
 // HANDLE PRODUCTION
-
 if (process.env.NODE_ENV === "production") {
   // static folder
 

@@ -88,25 +88,27 @@ exports.logIn = (req, res, next) => {
 
   userModel.findOne({ username: credentials.username }, (err, user) => {
     if (err) return console.log("error", err);
+    if (user) {
+      const password = user.password;
+      const checkPassword = bcrypt.compareSync(credentials.password, password);
 
-    const password = user.password;
-    const checkPassword = bcrypt.compareSync(credentials.password, password);
+      if (!checkPassword) {
+        return res.status(401).send({
+          auth: false,
+          message: "Wrong password, please try again",
+        });
+      } else {
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: 60 * 60, // expires in 1 hour
+        });
 
-    if (!checkPassword) {
-      return res.status(401).send({
-        auth: false,
-        token: null,
-        msg: "Authentication failed, try again",
-      });
+        res.cookie("token", token);
+        return res
+          .status(200)
+          .json({ auth: true, message: "Authentication succeded" });
+      }
     } else {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: 60 * 60, // expires in 1 hour
-      });
-
-      res.cookie("token", token);
-      return res
-        .status(200)
-        .json({ auth: true, message: "Authentication succeded" });
+      return res.json({ auth: false, message: "Name incorrect" });
     }
   });
 };
